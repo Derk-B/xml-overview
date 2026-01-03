@@ -1,0 +1,8 @@
+<root key="input.xml">
+    <child key="value">Some text</child>
+    <child key="value2">Some more text</child>
+    <self-closing-child key="value2" />
+</root>
+
+<root key="input2.xml">
+</root>

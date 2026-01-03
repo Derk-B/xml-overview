@@ -1,4 +1,4 @@
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub enum Token {
     TagOpenStart(String),
     TagCloseStart(String),
@@ -8,5 +8,6 @@ pub enum Token {
     String(String),
     Comment(String),
     Whitespace,
+    Newline,
     Text(String), // Different from a String in the sence that a String is surrounded by double qoutes and Text is not.
 }
