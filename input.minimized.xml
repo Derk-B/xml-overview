@@ -1,0 +1,18 @@
+<root key="">
+   
+    <child key="">Some text</child>
+    
+    <self-closing-child key=""/>
+</root>
+<root2 key="">
+    
+    hey
+    asdf
+    <tag key=""/>
+    <child2>
+       
+        <child3>hallo</child3>
+        
+    </child2>
+</root2>
+

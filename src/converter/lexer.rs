@@ -2,16 +2,12 @@ pub mod block;
 mod errors;
 pub mod token;
 
-use std::collections::VecDeque;
+use core::panic;
 
-use block::Block;
 use errors::LexError;
 use token::Token;
 
-use crate::converter::{
-    config::Config,
-    lexer::block::{BlocBodyItem, BlocClosing, BlocOpen, BlocSelfClosing},
-};
+use crate::converter::{config::Config, lexer::block::Graph};
 
 type LexResult = (Token, String);
 
@@ -244,52 +240,83 @@ pub fn lex_tokens(file: String, config: Config) -> Result<Vec<Token>, LexError> 
     Ok(tokens)
 }
 
-pub fn lex_open_block(tokens: Vec<Token>) -> Vec<Block> {
-    Vec::new()
-}
-
-pub fn lex_blocks(mut tokens: Vec<Token>) -> Result<Vec<Block>, String> {
+pub fn lex_graph(tokens: Vec<Token>) -> Result<Graph, String> {
     let mut current_token = tokens.first().ok_or("No tokens available")?;
     let mut remaining_tokens = tokens[1..].to_vec();
 
-    let mut opening_tags_queue = VecDeque::<BlocOpen>::new();
-    let mut current_block = BlocOpen {
-        name: String::from("root"),
-        parent: None,
-        body: Vec::new(),
-        keys: Vec::new(),
-    };
+    let mut graph: Graph = Graph::new();
 
     loop {
         match current_token {
             Token::TagOpenStart(tag_name) => {
-                let new_block = BlocOpen {
-                    name: tag_name.clone(),
-                    parent: Some(Box::new(current_block)),
-                    keys: Vec::new(),
-                    body: Vec::new(),
-                };
-
-                current_block.body.push(BlocBodyItem::B(new_block));
-
-                let pos = remaining_tokens[1..]
+                let closing_tag_pos = remaining_tokens
                     .iter()
-                    .position(|t| *t == Token::TagClosing);
+                    .position(|t| *t == Token::TagClosing || *t == Token::TagSelfClosing)
+                    .ok_or("Failed to find a closing tag")?;
+
+                let keys_inside_tag = &remaining_tokens[1..closing_tag_pos]
+                    .iter()
+                    .filter(|t| match t {
+                        Token::Key(_) => true,
+                        _ => false,
+                    })
+                    .map(|t| match t {
+                        Token::Key(key_name) => key_name.clone(),
+                        _ => panic!("Fatal error: filter somehow failed for {:?}", t),
+                    })
+                    .collect::<Vec<String>>();
+
+                let node_name = tag_name;
+                let node_keys = keys_inside_tag;
+                graph.add_node(node_name, node_keys);
+
+                remaining_tokens = remaining_tokens[closing_tag_pos..].to_vec();
             }
-            Token::TagCloseStart(_) => {}
-            Token::TagClosing => {}
-            Token::TagSelfClosing => {}
-            t => {
-                if opening_tags_queue.is_empty() {
-                    return Err(String::from(format!(
-                        "Invalid token found with not parent block: {:?}",
-                        t
-                    )));
+            Token::TagCloseStart(_) => {
+                let closing_tag_pos = remaining_tokens
+                    .iter()
+                    .position(|t| *t == Token::TagClosing)
+                    .ok_or("Failed to find a closing tag")?;
+
+                remaining_tokens = remaining_tokens[closing_tag_pos + 1..].to_vec();
+
+                graph.close_current();
+            }
+            Token::TagClosing => {
+                let next_opening_pos = remaining_tokens[1..].iter().position(|t| match t {
+                    Token::TagCloseStart(_) => true,
+                    Token::TagOpenStart(_) => true,
+                    _ => false,
+                });
+
+                if let Some(pos) = next_opening_pos {
+                    for token in remaining_tokens[1..pos].iter() {
+                        graph.add_token(token);
+                    }
+                } else {
+                    // End of file reached
+                    break;
                 }
+
+                remaining_tokens = remaining_tokens[1..].to_vec();
+            }
+            Token::TagSelfClosing => {
+                graph.close_current();
+                remaining_tokens = remaining_tokens[1..].to_vec();
+            }
+            t => {
+                graph.add_token(t);
+                remaining_tokens = remaining_tokens[1..].to_vec();
             } // if let Some(block) =
         }
+
+        if remaining_tokens.is_empty() {
+            break;
+        }
+
+        current_token = &remaining_tokens[0];
     }
-    Ok(Vec::new())
+    Ok(graph)
 }
 
 #[cfg(test)]

@@ -4,5 +4,12 @@
     <self-closing-child key="value2" />
 </root>
 
-<root key="input2.xml">
-</root>
+<root2 key="input2.xml">
+    hey
+    asdf
+    <tag key="val3"/>
+    <child2>
+        <child3>hallo</child3>
+        <child3>hallo2</child3>
+    </child2>
+</root2>

@@ -1,0 +1,173 @@
+<0 ><root key="">
+     Some text
+    <child key="">Some textSome text</child>
+    <child key="">Some more textSome more text</child>
+    <self-closing-child key=""/>
+</root>
+
+<root2 key="">
+
+</root2>
+
+</0><root key="">
+     Some text
+    <child key="">Some textSome text</child>
+    <child key="">Some more textSome more text</child>
+    <self-closing-child key=""/>
+</root><child key="">Some textSome text</child><child key="">Some more textSome more text</child><self-closing-child key=""/><root2 key="">
+
+</root2>
+
+<0 ><root key="">
+     
+    <child key="">Some text</child>
+    <child key="">Some more text</child>
+    <self-closing-child key=""/>
+</root>
+
+<root2 key="">
+</root2>
+
+</0><root key="">
+     
+    <child key="">Some text</child>
+    <child key="">Some more text</child>
+    <self-closing-child key=""/>
+</root><child key="">Some text</child><child key="">Some more text</child><self-closing-child key=""/><root2 key="">
+</root2>
+
+<0 >
+</0>
+<root key="">
+</root>
+<child key="">Some text</child>
+<child key="">Some more text</child>
+<self-closing-child key=""/>
+<root2 key="">
+</root2>
+
+<0><root key="">
+     
+    <child key="">Some text</child>
+    <child key="">Some more text</child>
+    <self-closing-child key=""/>
+</root>
+
+<root2 key="">
+    
+        hallo
+        
+   
+    <child>
+        hallo
+        
+   
+        hallo
+        <tag/>
+    </child>
+</root2>
+</0>
+
+<0><root key="">
+     
+    <child key="">Some text</child>
+    <child key="">Some more text</child>
+    <self-closing-child key=""/>
+</root>
+
+<root2 key="">
+     
+        hallo
+        
+   
+    <child tag="">
+        hallo
+        e
+   
+        hallo
+        <tag/>
+    </child>
+</root2>
+</0>
+
+<0><root key="">
+   
+    <child key="">Some text</child>
+    <child key="">Some more text</child>
+    <self-closing-child key=""/>
+</root>
+
+<root2 key="">
+
+hey
+asdf
+
+<tag key=""/>
+<child2>
+<child3>hallo</child3>
+</child2>
+</root2>
+</0>
+
+// minimized version
+
+<0><root key="">
+   
+    <child key="">Some text</child>
+    <child key="">Some more text</child>
+    <self-closing-child key=""/>
+</root>
+
+<root2 key="">
+
+hey
+asdf
+
+<tag key=""/>
+<child2>
+<child3>hallo</child3>
+</child2>
+</root2>
+</0>
+
+// Original version
+<0><root key="">
+   
+    <child key="">Some text</child>
+    <child key="">Some more text</child>
+    <self-closing-child key=""/>
+</root>
+
+<root2 key="">
+
+hey
+asdf
+
+<tag key=""/>
+<child2>
+<child3>hallo</child3>
+</child2>
+</root2>
+</0>
+
+
+// Prettier format
+<0>     <root key="">
+   
+        <child key="">Some text</child>
+    
+        <self-closing-child key=""/>
+</root>
+
+        <root2 key="">
+    
+    hey
+    asdf
+        <tag key=""/>
+        <child2>
+       
+                <child3>hallo</child3>
+        
+    </child2>
+</root2>
+</0>

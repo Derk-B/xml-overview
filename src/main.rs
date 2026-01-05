@@ -12,7 +12,7 @@ struct Args {
     #[arg(short, long)]
     file: PathBuf,
 
-    /// (Optional) The maximum depth of the XML tree that should be considered. 
+    /// (Optional) The maximum depth of the XML tree that should be considered.
     /// Leave empty to read the whole XML structure.
     #[arg(short, long)]
     depth: Option<usize>,
@@ -22,12 +22,23 @@ struct Args {
     output: Option<PathBuf>,
 
     /// (Optional) Show extra comments in the overview that give extra information related to the original XML, like how many XML tags were omitted in a certain position.
-    #[arg(short, long, default_value_t=false)]
+    #[arg(short, long, default_value_t = false)]
     verbose: bool,
 }
 
 fn main() {
     let args = Args::parse();
 
-    converter::convert(&args.file);
+    let result = converter::convert(&args.file);
+
+    let mut lines = result.lines();
+    let mut reduced_result = String::from("");
+    while let Some(l) = lines.next() {
+        if !l.is_empty() {
+            reduced_result.push_str(l);
+            reduced_result.push('\n');
+        }
+    }
+
+    println!("{}", reduced_result);
 }

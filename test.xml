@@ -1,0 +1,9 @@
+<tag key="value">hello</tag>
+
+input_str = "<tag key="value">hello</tag>"
+pointer = 0
+
+parse_token(input_str) 
+
+input_str = "<tag key="value">hello</tag>"
+pointer = 5
